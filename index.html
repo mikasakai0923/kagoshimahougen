@@ -1,49 +1,15 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="jp-JP">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | AdvenMap</title>
+    <title>鹿児島方言アドベンチャー</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
-
-<script>
-  // function lockOrientation() {
-  //   if (screen.orientation && screen.orientation.lock) {
-  //     screen.orientation.lock("landscape").catch(err => {
-  //       console.log("Orientation lock failed:", err);
-  //     });
-  //   }
-  //   function resizeCanvas() {
-  //     const canvas = document.getElementById("unity-canvas");
-  //     canvas.style.width = window.innerHeight + "px"; // 横に縦幅
-  //     canvas.style.height = window.innerWidth + "px"; // 縦に横幅
-  //   }
-  //   window.addEventListener("resize", resizeCanvas);
-  //   window.addEventListener("load", resizeCanvas);
-  // }
-
-  document.addEventListener("DOMContentLoaded", lockOrientation);
-</script>
-
-<style>
-    #unity-canvas {
-      /* position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: rotate(90deg) translate(-50%, -50%);
-      transform-origin: center center; */
-
-      /* 縦横をブラウザにフィット */
-      /* width: 100vh;   ← 横に縦サイズを使う */
-      /* eight: 100vw;   ← 縦に横サイズを使う */
-    }
-  </style>
   <body>
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=1280 height=720 tabindex="-1">
-      </canvas>
+      <canvas id="unity-canvas" width=1280 height=720 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -54,8 +20,14 @@
       <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
         <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">AdvenMap</div>
+        <div id="unity-build-title">鹿児島方言アドベンチャー</div>
       </div>
+      <dialog style="text-align: center;">
+        <form method = "dialog">
+            <p>スマホを横向きにしてゲームをしよう</p>
+            <button>OK</button>
+        </form>
+      </dialog>
     </div>
     <script>
 
@@ -98,8 +70,8 @@
         codeUrl: buildUrl + "/event-web-adven-map-kadai.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "IT Adventure",
-        productName: "AdvenMap",
-        productVersion: "03.0",
+        productName: "鹿児島方言アドベンチャー",
+        productVersion: "0.7.0",
         showBanner: unityShowBanner,
       };
 
@@ -141,27 +113,49 @@
         canvas.style.height = "720px";
       }
 
-      loadingBar.style.display = "block";
+      // Unity読み込み用の関数を定義
+      function loadUnity() {
+       loadingBar.style.display = "block";
 
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                loadingBar.style.display = "none";
-                fullscreenButton.onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-              }).catch((message) => {
-                alert(message);
-              });
+       var script = document.createElement("script");
+       script.src = loaderUrl;
+       script.onload = () => {
+         createUnityInstance(canvas, config, (progress) => {
+           progressBarFull.style.width = 100 * progress + "%";
+         }).then((unityInstance) => {
+            loadingBar.style.display = "none";
+            fullscreenButton.onclick = () => {
+              unityInstance.SetFullscreen(1);
             };
+          }).catch((message) => {
+            alert(message);
+          });
+        };
 
-      document.body.appendChild(script);
-
+        document.body.appendChild(script);
+      }
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        // モバイルデバイスの場合のみ画面の向きをチェック
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          if(screen.orientation.angle === 0 || screen.orientation.angle === 180) {
+            const dialog = document.querySelector('dialog');
+            dialog.showModal();
+            
+            // dialogがcloseされた時にUnityを読み込む
+            dialog.addEventListener('close', () => {
+              loadUnity();
+            });
+          } else {
+            // 横向きの場合は即座に読み込み開始
+            loadUnity();
+          }
+        } else {
+          // PCの場合は即座に読み込み開始
+          loadUnity();
+        }
+      });
     </script>
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-CTFXD1JTL4"></script>
   <script>

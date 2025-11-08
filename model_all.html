@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鹿児島方言アドベンチャー</title>
+    <meta name="description" content="鹿児島方言アドベンチャーの3Dモデルを表示しよう！">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&family=M+PLUS+Rounded+1c:wght@400;800&family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v6.4.2/css/all.css" rel="stylesheet">
+    <meta property="og:title" content="鹿児島方言アドベンチャー">
+    <meta property="og:site_name" content="鹿児島方言アドベンチャー">
+    <meta property="og:description" content="鹿児島方言アドベンチャーの3Dモデルを表示しよう！">
+    <meta property="og:image" content="">
+    <meta property="og:type" content="website">
+    <style>
+    body {
+        margin: 0;
+        font-family: "M PLUS Rounded 1c", sans-serif;
+        background-image: linear-gradient(90deg, rgba(140, 211, 12, 1), rgba(173, 255, 61, 1) 50%, rgba(140, 211, 12, 1));
+        color: #705A42;/*文字色*/
+    }
+    header h1 {
+        font-weight: 800;
+        font-style: normal;
+        text-align: center;
+    }
+    header h1 img{
+        width: 400px;
+    }
+    @media (max-width: 600px) {
+        header h1 img{
+            width: 260px;
+        }
+    }
+
+    header h2 {
+        font-weight: 600;
+        text-align: center;
+    }
+    header p {
+        font-weight: 600;
+        text-align: center;
+    }
+    header menu {
+        font-weight: 600;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+    header menu ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        list-style: none;
+        padding: 20px 0 20px 0;
+        gap: 20px;
+    }
+    header menu li {
+        white-space: nowrap;
+    }
+
+    h3 {
+        font-weight: 600;
+        text-align: center;
+    }
+    h4 {
+        font-weight: 600;
+        text-align: right;
+    }
+
+    footer p {
+        font-weight: 600;
+        text-align: center;
+    }
+    .container{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .container h2{
+        padding: 0;
+        font-weight: 600;
+        text-align: center;
+        color: #4B371C;
+    }
+    .container h4{
+        padding: 0;
+        font-weight: 600;
+        text-align: center;
+        color: #4B371C;
+    }
+    
+    model-viewer {
+        /* width: 400px; */
+        /* height: 90vh;
+        display: block; */
+        /* background-color: #00ff00; */
+    }
+
+    /* モデル切り替えボタンのスタイル */
+    .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+    /* ボタンは下に固定 */
+    .controls button {
+        width: 80px;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        background: #FF8C00;
+        color: white;
+        cursor: pointer;
+    }
+    .controls button:hover {
+        background: #ff923e;
+    }
+    </style>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const viewer = document.querySelector("model-viewer");
+
+        // アニメーション切り替え
+        function setAnimation(name) {
+            viewer.animationName = name;
+            viewer.paused = false;
+            console.log("再生中:", name);
+        }
+
+        // 読み込み時にアニメーション一覧確認
+        viewer.addEventListener("model-visibility", () => {
+            console.log("利用可能アニメーション:", viewer.availableAnimations);
+            // Idle があれば自動再生する
+            if (viewer.availableAnimations.includes("Idle")) {
+                setAnimation("Idle");
+            }
+        });
+
+        // モデルクリック時にアニメーション再生
+        // viewer.addEventListener("click", () => {
+        //   // 例: Idleアニメーションを再生
+        //   if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
+        //     setAnimation(viewer.availableAnimations[0]);
+        //   }
+
+        //   // 再生開始
+        //   // viewer.play();
+        //   // viewer.play({animationName: 'Welcome'}); //ループ
+        //   // viewer.play({animationName: 'Welcome', repetitions: 1}); //1回ループ
+        //   // viewer.pause();
+        // });
+
+        // すべてのモデル切り替えボタンにイベントを設定
+        document.querySelectorAll('.controls button[data-model]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // ボタンの親（controls）の前の兄弟要素（model-viewer）を取得
+                const viewer = btn.parentElement.previousElementSibling;
+                if (viewer && viewer.tagName === 'MODEL-VIEWER') {
+                    viewer.src = "models/" + btn.dataset.model + ".glb";
+                    viewer.animationName = null;
+                }
+            });
+        });
+    });
+    </script>
+    <!-- Import the component -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+</head>
+
+<body>
+<header>
+    <h1>
+        <img src="images/title-logo.png" alt="鹿児島方言アドベンチャー" width="400px">
+    </h1>
+    <h2>モデル一覧ページへようこそ！</h2>
+    <p>
+    🎮️ゲーム内の3DモデルをAR表示できます✨️<br>
+    3Dモデルを回転・拡大縮小してみよう！
+    </p>
+
+    <menu>
+        <ul>
+            <li><a href="#character">キャラクター</a></li>
+            <li><a href="#animal">動物</a></li>
+            <li><a href="#food">食べ物</a></li>
+            <li><a href="#vehicle">乗り物</a></li>
+            <li><a href="#landmark">ランドマーク</a></li>
+            <li><a href="#object">オブジェクト</a></li>
+        </ul>
+    </menu>
+</header>
+    <!-- Use it like any other HTML element -->
+    <!-- poster: Loading用の画像 -->
+    <!-- environment-image: 画像で環境反射をシミュレート -->
+    <!-- shadow-intensity: model-viewerの照明による陰影の強度(デフォルト:0, 1に近いほど値が1に近いほど、陰影の濃さがます) -->
+    <!-- camera-controls: 3Dモデルを操作するためのカメラコントロールを有効 -->
+    <!-- touch-action: モバイル端末で3Dモデルをタッチ操作する場合のブラウザのデフォルトのタッチアクションを変更  -->
+
+
+<h3 id="character">キャラクター</h3>
+<section class="container">
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-paw"></i>さっつん</h2>
+        <model-viewer
+            alt=""
+            src="models/sattun.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">原囿晴</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-user"></i>西郷隆盛</h2>
+        <model-viewer
+            alt=""
+            src="models/saigotakamori.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">松元彩菜</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-user"></i>大久保利通</h2>
+        <model-viewer
+            alt=""
+            src="models/okubotoshimichi.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">梅山大智</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-user"></i>篤姫</h2>
+        <model-viewer
+            alt=""
+            src="models/atsuhime.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">谷口桃子</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-paw"></i>島津義弘</h2>
+        <model-viewer
+            alt=""
+            src="models/shimazuyoshihiro.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">原囿晴</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-user"></i>鹿児島大学学長</h2>
+        <model-viewer
+            alt=""
+            src="models/gakutyou.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">谷口桃子</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-paw"></i>ぐりぶー</h2>
+        <model-viewer
+            alt=""
+            src="models/guribu.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">野口しおり</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-paw"></i>さくら</h2>
+        <model-viewer
+            alt=""
+            src="models/sakura.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">野口しおり</span></h4>
+    </div>
+</section>
+
+<h3 id="animal">動物</h3>
+<section class="container">
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-paw"></i>ツン</h2>
+        <model-viewer
+            alt=""
+            src="models/tsun.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">田中卓磨</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-paw"></i>イルカ</h2>
+        <model-viewer
+            alt=""
+            src="models/iruka1.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <!-- モデル切り替え -->
+        <div class="controls">
+            <button data-model="iruka1">ピンク</button>
+            <button data-model="iruka2">黄</button>
+            <button data-model="iruka3">黒</button>
+        </div>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">谷口玲奈</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-paw"></i>コアラ</h2>
+        <model-viewer
+            alt=""
+            src="models/koara.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">宿里梨心</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-paw"></i>ルリカケス</h2>
+        <model-viewer
+            alt=""
+            src="models/rurikakesu.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">野口しおり</span></h4>
+    </div>
+</section>
+
+<h3 id="food">食べ物</h3>
+<section class="container">
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-apple-whole"></i>桜島大根</h2>
+        <model-viewer
+            alt=""
+            src="models/sakurajimadaikon.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">髙倉秀真</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-apple-whole"></i>さつま芋</h2>
+        <model-viewer
+            alt=""
+            src="models/satsumaimo.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">永田青旺</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-apple-whole"></i>しろくま(かき氷)</h2>
+        <model-viewer
+            alt=""
+            src="models/shirokuma-kakigori.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">谷口桃子</span></h4>
+    </div>
+</section>
+
+<h3 id="vehicle">乗り物</h3>
+<section class="container">
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-train-subway"></i>鹿児島市電</h2>
+        <model-viewer
+            alt=""
+            src="models/kagoshimashiden1.glb"
+            ar
+            poster="transparent.png"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <!-- モデル切り替え -->
+        <div class="controls">
+            <button data-model="kagoshimashiden1">市電1</button>
+            <button data-model="kagoshimashiden2">市電2</button>
+        </div>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">梅木敢太</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-ferry"></i></i>桜島フェリー</h2>
+        <model-viewer
+            alt=""
+            src="models/sakurajimaferry.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">上籠健人</span></h4>
+    </div>
+</section>
+
+<h3 id="landmark">ランドマーク</h3>
+<section class="container">
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>鹿児島大学</h2>
+        <model-viewer
+            alt=""
+            src="models/kagoshimadaigaku.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">原囿晴</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>アミュプラザ鹿児島</h2>
+        <model-viewer
+            alt=""
+            src="models/amu.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">原囿晴</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>かごしま水族館</h2>
+        <model-viewer
+            alt=""
+            src="models/kagoshimasuizokukan.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">梅山大智</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>平川動物公園</h2>
+        <model-viewer
+            alt=""
+            src="models/hirakawadoubutsuen.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">梅山大智</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>仙巌園</h2>
+        <model-viewer
+            alt=""
+            src="models/senganen.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">田中創太</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>鶴丸城 御楼門</h2>
+        <model-viewer
+            alt=""
+            src="models/goromon.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">関康生</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>温泉</h2>
+        <model-viewer
+            alt=""
+            src="models/onsen.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">野口しおり</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>鴨池陸上競技場</h2>
+        <model-viewer
+            alt=""
+            src="models/rikuzyoukyougijyou.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">愛甲将太</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>鹿児島市立科学館</h2>
+        <model-viewer
+            alt=""
+            src="models/kagakukan.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">井原悠登</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>鹿児島アリーナ</h2>
+        <model-viewer
+            alt=""
+            src="models/kagoshimaarena.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">長﨑亮仁</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-landmark"></i>鹿児島県庁</h2>
+        <model-viewer
+            alt=""
+            src="models/kagoshimakentyou.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">坂本知太</span></h4>
+    </div>
+</section>
+
+<h3 id="object">オブジェクト</h3>
+<section class="container">
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-box"></i>王冠</h2>
+        <model-viewer
+            alt=""
+            src="models/oukan.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">大久保健太</span></h4>
+    </div>
+    <div>
+        <h2 class="model_name"><i class="fa-solid fa-box"></i>看板</h2>
+        <model-viewer
+            alt=""
+            src="models/kanban.glb"
+            ar
+            poster="shared-assets/models/NeilArmstrong.webp"
+            shadow-intensity="1" 
+            camera-controls 
+            touch-action="pan-y">
+        </model-viewer>
+        <h4><i class="fas fa-user-edit"></i>クリエイター：<span class="creator_name">野口しおり</span></h4>
+    </div>
+</section>
+
+<footer>
+    <p>鹿児島方言アドベンチャー</p>
+</footer>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CTFXD1JTL4"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-CTFXD1JTL4');
+</script>
+</body>
+</html>
